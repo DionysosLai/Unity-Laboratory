@@ -87,15 +87,39 @@
 1. 由于我们这里用不到一些自定义参数，因此需要将
 
    ``` glsl
-       Properties
-       {
-           _MainTex ("Texture", 2D) = "white" {}
-       }
+   Properties
+   {
+       _MainTex ("Texture", 2D) = "white" {}
+   }
    修改成
-       Properties
-       {
-           _MainTex ("Texture", 2D) = "white" {}
-       }
+   Properties
+   {
+       _MainTex ("Texture", 2D) = "white" {}
+   }
    ```
 
-2.  
+2. 采用lerp语句，抛弃超过原点一定距离得点，具体代码如下
+
+   ```glsl
+   fixed4 frag (v2f i) : SV_Target
+   {
+       return step(length(i.uv - fixed2(0.5, 0.5)), 0.3);
+   }
+   ```
+
+   这里原点取object 中心点，半径为0.3。效果如下：
+
+   ![Alt text](https://github.com/DionysosLai/Unity-Laboratory/blob/main/doc/res/day1/02.png)
+
+## 问题
+
+​		以上思路存在2个问题，当
+
+One More
+
+​		这里，我们可以自定义圆形的圆心和颜色值，并封住成一个独立函数：
+
+```glsl
+
+```
+

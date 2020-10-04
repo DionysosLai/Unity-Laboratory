@@ -4,7 +4,6 @@ Shader "Laboratory/day1/CircleShader"
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
     }
     SubShader
     {
@@ -62,7 +61,12 @@ Shader "Laboratory/day1/CircleShader"
             // }
             fixed4 frag (v2f i) : SV_Target
             {
-                return fixed4(1.0, 1.0, 1.0, 1.0);
+                fixed2 screenUV=i.uv;
+                //screenUV.x *= _ScreenParams.x/_ScreenParams.y;
+                //screenUV.x *= _ProjectionParams.x/_ProjectionParams.y;
+                //screenUV.y *= _ProjectionParams.x/_ProjectionParams.y;
+                //screenUV.y *= _ScreenParams.x/_ScreenParams.y;
+                return step(length(screenUV-fixed2(0.5,0.5)),0.2);
             }
             ENDCG
         }
