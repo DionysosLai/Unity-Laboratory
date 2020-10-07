@@ -80,7 +80,7 @@
 
 经过以上步骤后，场景中显示如下：
 
-![Alt text](https://github.com/DionysosLai/Unity-Laboratory/blob/main/doc/res/day1/01.png)
+<img src="https://raw.githubusercontent.com/DionysosLai/PicGoImage/main/01.png" style="zoom:50%;" />
 
 打开CircleShader，重点是修改片段着色器。
 
@@ -109,7 +109,7 @@
 
    这里原点取object 中心点，半径为0.3。效果如下：
 
-   ![Alt text](https://github.com/DionysosLai/Unity-Laboratory/blob/main/doc/res/day1/02.png)
+   <img src="https://raw.githubusercontent.com/DionysosLai/PicGoImage/main/02.png" style="zoom:50%;" />
 
 One More
 
@@ -139,7 +139,7 @@ fixed4 frag (v2f i) : SV_Target
 
 ​		这里，我们画了一个基本三原色图像。具体效果如下：
 
-![Alt text](https://github.com/DionysosLai/Unity-Laboratory/blob/main/doc/res/day1/03.png)
+<img src="https://raw.githubusercontent.com/DionysosLai/PicGoImage/main/03.png" style="zoom:50%;" />
 
 ----
 
@@ -149,4 +149,4 @@ fixed4 frag (v2f i) : SV_Target
 
 ​		当模型的的Scale中x和y不一致时，明显得不到正圆，这个该如何解决？如图所示，此时该如何解决...
 
-![Alt text](https://github.com/DionysosLai/Unity-Laboratory/blob/main/doc/res/day1/04.png)
+<img src="https://raw.githubusercontent.com/DionysosLai/PicGoImage/main/04.png" style="zoom:50%;" />
