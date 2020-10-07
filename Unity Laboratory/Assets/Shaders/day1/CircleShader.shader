@@ -40,33 +40,24 @@ Shader "Laboratory/day1/CircleShader"
                 return o;
             }
 
-            fixed DrawCircle(float2 screenUV,float2 pos,float radius)
+            fixed4  DrawCircle(float2 screenUV, float2 pos, float radius, fixed4 color)
             {   
-                screenUV-=pos;
-                return step(length(screenUV),radius);
+                return step(length(screenUV - pos), radius) * color ;
             }
 
-            // fixed4 frag (v2f i) : SV_Target
-            // {
-            //     fixed2 screenUV=i.uv;
-            //     screenUV.x*=_ScreenParams.x/_ScreenParams.y;
+            fixed4 DrawCircleClip(float2 screenUV, float2 pos, float radius, fixed4 color)
+            {
+                clip(length(screenUV - pos) - radius);
+                return color;
+            }
 
-            //     fixed4 _layer0=fixed4(0,0,0,1);
-
-            //     fixed4 _c0=DrawCircle(screenUV,fixed2(0.7,0.7),0.2)*fixed4(1,0,0,1);
-            //     fixed4 _c1=DrawCircle(screenUV,fixed2(0.6,0.5),0.2)*fixed4(0,1,0,1);
-            //     fixed4 _c2=DrawCircle(screenUV,fixed2(0.8,0.5),0.2)*fixed4(0,0,1,1);
-
-            //     return _layer0+_c0+_c1+_c2;
-            // }
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed2 screenUV=i.uv;
-                //screenUV.x *= _ScreenParams.x/_ScreenParams.y;
-                //screenUV.x *= _ProjectionParams.x/_ProjectionParams.y;
-                //screenUV.y *= _ProjectionParams.x/_ProjectionParams.y;
-                //screenUV.y *= _ScreenParams.x/_ScreenParams.y;
-                return step(length(screenUV-fixed2(0.5,0.5)),0.2);
+                fixed4 _layer0=fixed4(0,0,0,1); // 底板颜色
+                fixed4 _c0 = DrawCircle(i.uv, fixed2(0.5,0.7), 0.2, fixed4(1,0,0,1));
+                fixed4 _c1 = DrawCircle(i.uv, fixed2(0.4,0.5), 0.2, fixed4(0,1,0,1));
+                fixed4 _c2 = DrawCircle(i.uv, fixed2(0.6,0.5), 0.2, fixed4(0,0,1,1));
+                return _layer0 + _c0 + _c1 + _c2;
             }
             ENDCG
         }

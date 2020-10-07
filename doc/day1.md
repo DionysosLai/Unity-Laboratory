@@ -111,15 +111,42 @@
 
    ![Alt text](https://github.com/DionysosLai/Unity-Laboratory/blob/main/doc/res/day1/02.png)
 
-## 问题
-
-​		以上思路存在2个问题，当
-
 One More
 
-​		这里，我们可以自定义圆形的圆心和颜色值，并封住成一个独立函数：
+​		这里，我们可以自定义圆形的圆心和颜色值，并封装成一个独立函数：
 
 ```glsl
-
+fixed4  DrawCircle(float2 screenUV, float2 pos, float radius, fixed4 color)
+{   
+    return step(length(screenUV - pos), radius) * color ;
+}
 ```
 
+​		自定义位置、半径和颜色三个参数
+
+​		最终，我们将`frag` 函数改写成:
+
+```glsl
+fixed4 frag (v2f i) : SV_Target
+{
+    fixed4 _layer0=fixed4(0,0,0,1); // 底板颜色
+    fixed4 _c0 = DrawCircle(i.uv, fixed2(0.5,0.7), 0.2, fixed4(1,0,0,1));
+    fixed4 _c1 = DrawCircle(i.uv, fixed2(0.4,0.5), 0.2, fixed4(0,1,0,1));
+    fixed4 _c2 = DrawCircle(i.uv, fixed2(0.6,0.5), 0.2, fixed4(0,0,1,1));
+    return _layer0 + _c0 + _c1 + _c2;
+}
+```
+
+​		这里，我们画了一个基本三原色图像。具体效果如下：
+
+![Alt text](https://github.com/DionysosLai/Unity-Laboratory/blob/main/doc/res/day1/03.png)
+
+----
+
+## 更多
+
+### 1. 一个问题
+
+​		当模型的的Scale中x和y不一致时，明显得不到正圆，这个该如何解决？如图所示，此时该如何解决...
+
+![Alt text](https://github.com/DionysosLai/Unity-Laboratory/blob/main/doc/res/day1/04.png)
