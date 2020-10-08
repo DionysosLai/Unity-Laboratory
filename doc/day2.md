@@ -65,5 +65,42 @@ Shader "Laboratory/day2/SingleTexture"
 
 ```
 
-​		具体效果图如下所示：
+​		具体效果图如下所示：具体效果查看Scenes/day2/day2_1
 
+<img src="https://raw.githubusercontent.com/DionysosLai/PicGoImage/main/day2_01.png" style="zoom:50%;" />
+
+## 实践
+
+1. 基础混合
+
+   ​		这里，我们再次添加一张纹理，直接对采集之后的纹理进行最基础**加**操作。核心代码如下:
+
+   ```glsl
+   Shader "Laboratory/day2/MulTexture"
+   {
+       Properties
+       {
+           _MainTex ("Main Texture", 2D) = "white" {}
+           _SecTex ("Seccond Texture", 2D) = "white" {}
+       	....
+               sampler2D _MainTex, _SecTex;
+               float4 _MainTex_ST;
+   		   ....	
+               fixed4 frag(v2f i) : SV_Target
+               {
+                   float4 mainTex = tex2D(_MainTex, i.uv);
+                   float4 secTex = tex2D(_MainTex, i.uv);
+                   return mainTex + secTex;
+               }
+               ENDCG
+           }
+       }
+   }
+   
+   ```
+
+   ​		具体效果图如下所示：具体效果查看Scenes/day2/day2_2
+
+   
+
+2.  
