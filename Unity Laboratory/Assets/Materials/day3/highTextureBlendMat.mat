@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MulAlphaTexture
-  m_Shader: {fileID: 4800000, guid: f7180e818df948a4b9ceb96a3eaec98d, type: 3}
+  m_Name: highTextureBlendMat
+  m_Shader: {fileID: 4800000, guid: bf490155a155390458d63ea91420c5e1, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -19,20 +19,12 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _ATexture:
-        m_Texture: {fileID: 2800000, guid: 24d6340a14f60be4ab33fb76eefafd93, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _BTexture:
-        m_Texture: {fileID: 2800000, guid: 8130cb564a7b5c145ac7cc2d4e35dfbf, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _BlendTex:
-        m_Texture: {fileID: 2800000, guid: 1cfc02c466738124698de9a06ed8175e, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Control:
+        m_Texture: {fileID: 2800000, guid: 66f80c6beba88b04e83940cb65016f0a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -51,12 +43,8 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _GTexture:
-        m_Texture: {fileID: 2800000, guid: a77a3c17f4fe0fd41829da8aac133b61, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 167ed272a306fcf449a446bda525ba59, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -71,13 +59,21 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _RTexture:
-        m_Texture: {fileID: 2800000, guid: 6af75148c5d90f14a80de8d39dfbcd29, type: 3}
-        m_Scale: {x: 1, y: 1}
+    - _Splat0:
+        m_Texture: {fileID: 2800000, guid: 892597ae554d7cf4287a1320099eedbb, type: 3}
+        m_Scale: {x: 5, y: 5}
         m_Offset: {x: 0, y: 0}
-    - _SecTex:
-        m_Texture: {fileID: 2800000, guid: 2ef096a1ed185bb4d9d6a77ed9ed7d6e, type: 3}
-        m_Scale: {x: 1, y: 1}
+    - _Splat1:
+        m_Texture: {fileID: 2800000, guid: 66edf5a1f2341b446b1829ae81404f6d, type: 3}
+        m_Scale: {x: 5, y: 5}
+        m_Offset: {x: 0, y: 0}
+    - _Splat2:
+        m_Texture: {fileID: 2800000, guid: 2bd969687af455a4480f335fca7fb391, type: 3}
+        m_Scale: {x: 5, y: 5}
+        m_Offset: {x: 0, y: 0}
+    - _Splat3:
+        m_Texture: {fileID: 2800000, guid: 7936e57501354fb4fa040d3559e83e85, type: 3}
+        m_Scale: {x: 5, y: 5}
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
