@@ -48,5 +48,39 @@
 
      文档中，有提到Global Volume会渲染具体element 到3个render texture 中，这块不好理解。其中，还有具体还有一些设置也没看懂。后期再看吧。
 
+###  3. 预设转换（Prefabs  Conversion）
 
+​		通过 Window->BOXOPHOBIC->The Vegetation Engine->Prefab Converer 可以打开转换界面，如图所示：
+
+<img src="https://raw.githubusercontent.com/DionysosLai/PicGoImage/main/day4_05.png" style="zoom:67%;" />
+
+​		Prefabs Conversion 可以提供一个转换器，将一些预设转换为符合插件的预设。这里，我们选取一个预先做好的预设，到场景中，并进行转换操作。如所示：
+
+<img src="https://raw.githubusercontent.com/DionysosLai/PicGoImage/main/day4_06.png" style="zoom:67%;" />
+
+​		这里，我们选中预设 Sword_Fern (First Steps)，并且将Conversion Preset 选择为Procedural->Plant（其他类型，需要后期研究），点击Convert 按钮。之后，就会在同级目录上生成一个同名“Sword_Fern (First Steps)”文件夹。
+
+![](https://raw.githubusercontent.com/DionysosLai/PicGoImage/main/day4_07.png)
+
+​		文件内容分别对应Texture、material、mesh和预设备份文件。
+
+### 4. 预设设置（Prefabs Setting）
+
+​		经过预设转换之后，目前预设已经满足插件数据驱动要求，现在需要设置一些湿度、噪声等设置。在这之前，我们需要先开启Animated Materials，这样可以在Scene 界面实时看到结果。如图所示:
+
+![](https://raw.githubusercontent.com/DionysosLai/PicGoImage/main/day4_08.png)
+
+​		
+
+​		通过Window->BOXOPHOBIC->The Vegetation Engine->Prefab Setting 即可打开预设设置界面。
+
+![](https://raw.githubusercontent.com/DionysosLai/PicGoImage/main/day4_09.png)
+
+​		在调整时，我们可以选择Motion 和 Shading 2种方式进行调整。同时，在调整Motion参数时，可以通过上面wind 滑动条，调整wind的强度，查看具体效果。效果如下所示：
+
+<img src="https://raw.githubusercontent.com/DionysosLai/PicGoImage/main/day4_10.gif" style="zoom:67%;" />
+
+​		同时，Material Preset 提供一些预先设置好内容，可以快速选择其中一些内容。
+
+​		
 
