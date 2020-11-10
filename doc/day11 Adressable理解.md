@@ -8,6 +8,8 @@
 
 ### 知识点
 
+​		首先，推荐unity官网Addressable教程：https://www.bilibili.com/video/BV1N4411q7NA?from=search&seid=8464478610230252401
+
 ### 1. 根据AssetReference 加载
 
 ​		AssetReference 类提供了一种访问Addressable Assets 的方法，可以不用知道他们的地址。示例代码如下：
@@ -109,11 +111,9 @@ Addressables.LoadAssetsAsync is also useful when used in conjunction with the Ad
 
 
 
-
-
-
-
 ## 扩展
+
+
 
 ### IList与List
 
