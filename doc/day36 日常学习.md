@@ -86,7 +86,7 @@ static std::string get_last_error()
 }
 ```
 
-###4. UE4 中采用正则表达式检测字符
+### 4. UE4 中采用正则表达式检测字符
 
 ```c++
 #include "Internationalization/Regex.h"
