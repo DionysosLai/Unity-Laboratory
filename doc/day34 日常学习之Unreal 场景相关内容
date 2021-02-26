@@ -1,0 +1,119 @@
+# day34 日常学习之Unreal 场景相关内容
+
+20210126
+
+## 1. 概要
+
+​		了解UE4 关卡加载和流送机制
+
+---
+
+## 2. 知识点
+
+​		[UE4场景流送机制：（一）场景加载](https://zhuanlan.zhihu.com/p/269493281)
+
+### 2.1  LevelTick.cpp
+
+​		用来控制关卡tick（update）功能		
+
+#### 2.1.1 FDetailedTickstats
+
+​		收集场景中每个obj tick状态的结构体。
+
+### 2.2 UWorld 
+
+​		world 是等级最高对象，用来表示一个地图或者一个沙箱。场景中的所有Actor或者Component都是在world中存在并得到渲染。
+
+​		world可以是一个单独的Persistent Level，通过volumes或者蓝图进行加载和卸载（关卡类）。或者是一系列世界组成（大世界）
+
+​		关键函数：Tick，函数将更新所有Actor。其中
+
+```c++
+/**
+ * Update the level after a variable amount of time, DeltaSeconds, has passed.
+ * All child actors are ticked after their owners have been ticked.
+ */
+void UWorld::Tick( ELevelTick TickType, float DeltaSeconds )
+{
+	...
+
+				if( !bIsPaused )
+				{
+					// Issues level streaming load/unload requests based on local players being inside/outside level streaming volumes.
+					if (IsGameWorld())
+					{
+						ProcessLevelStreamingVolumes();
+
+						if (WorldComposition)
+						{
+							WorldComposition->UpdateStreamingState();
+						}
+					}
+				}
+...
+}
+```
+
+​		处理LevelStreamingVolume和WorldComposition两种流送方式。
+
+
+
+### 2.3 LevelStreamingVolume
+
+​		用来处理关卡型流送方式。
+
+### 2.4 异步Package加载
+
+​		这是统一package加载逻辑，源码：AsyncLoading.cpp
+
+### 2.5 UWorld::UpdateLevelStreaming
+
+​		场景加载主要入口。
+
+​		StreamingLevelsToConsider 的维护
+
+### 2.6 LevelStreaming::RequestLevel
+
+​		关卡加载入口。
+
+### 2.7 ULevelStream::AsyncLevelLoadComplete
+
+​		加载完成回调。
+
+### 2.8 LevelStream 状态机				
+
+```cpp
+// 当前状态
+enum class ECurrentState : uint8
+{
+	Removed,		// 被移除了
+	Unloaded,		// 卸载掉了
+	FailedToLoad,		// 加载失败了
+	Loading,		// 加载中
+	LoadedNotVisible,	// 加载但不可见
+	MakingVisible,		// 正在设置可见
+	LoadedVisible,		// 加载并可见
+	MakingInvisible		// 正在设置不可见
+};
+
+// 目标状态
+enum class ETargetState : uint8
+{
+	Unloaded,		// 目标状态卸载
+	UnloadedAndRemoved,	// 目标状态卸载并移除
+	LoadedNotVisible,	// 目标状态不可见
+	LoadedVisible,		// 目标状态可见
+};
+```
+
+<img src="https://raw.githubusercontent.com/DionysosLai/PicGoImage/main/image-20210201150645374.png" alt="image-20210201150645374" style="zoom:80%;" />
+
+### 2.9 流送方式
+
+​		LevelStreamVolume
+
+​		WorldComposition
+
+​		<img src="https://raw.githubusercontent.com/DionysosLai/PicGoImage/main/image-20210202095018690.png" alt="image-20210202095018690" style="zoom:80%;" />
+
+![image-20210202102240379](https://raw.githubusercontent.com/DionysosLai/PicGoImage/main/image-20210202102240379.png)

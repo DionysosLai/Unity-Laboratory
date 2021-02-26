@@ -1,0 +1,46 @@
+# day33 Unreal之地形入门
+
+20210119
+
+## 1. 概要
+
+​		链接：https://learn.unrealengine.com/course/3738116/module/7237993?moduletoken=UHxxnDLPW8SfBhJ32fH6nxnV9TXdbsvaKDKa8LjYhIGuY29fj7T5hIqbN~Ve-3hk&LPId=0
+
+​		UE4 兑换码：HENN3-Z2VEH-D9YU9-AZDYF
+
+---
+
+## 2. 知识点
+
+### 2.1 高度图
+
+​		首先要是灰度图，每个像素有16位深度 .png \ .raw 图片
+
+### 2.2 地形设置
+
+​		分段？组件数目？分辨率
+
+
+
+### 2.3 地形阅读
+
+​		https://www.cnblogs.com/lookof/archive/2009/12/30/1636289.html
+
+### 2.4 高度图
+
+​		高度图是一个正方形，而且边长应该满足2^N +1 的规律，因此高度图的尺寸应该是		5x5，9x9 ，17x17，.... 513x513
+
+### 2.5 重载 friend语法
+
+​		https://www.zhihu.com/question/44865154
+
+​		使用友元（friend）是为了让该函数可以访问 Complex 的非 public 成员
+
+### 2.6 开发规范
+
+​		https://github.com/skylens-inc/ue4-style-guide 
+
+
+
+### 2.7 sub-levels或者streaming levels
+
