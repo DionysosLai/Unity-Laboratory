@@ -78,4 +78,75 @@ HAPI_API.h // 链接库 和其他一些定义
 
 ## 三. 对字符串的处理
 
-​		
+​		通常情况下，如果我们要从houdini获取一个字符串，比方获取一个HAD参数面板的一个属性：字段为file的路径。Houdini并不是直接返回一个string，而是通过``HAPI_StringHandle``形式。通过HAPI_StringHandle，我们会获取到该string的id，然后根据这个id获取到具体的string。
+
+​		HAPI_StringHandle的定义如下：
+
+```c++
+// HAPI_Common.h
+
+/// Use this with HAPI_GetString() to get the value.
+/// See @ref HAPI_Fundamentals_Strings.
+typedef int HAPI_StringHandle;
+```
+
+​		下面给出2个具体通过HAPI_StringHandle过得到string的方案。
+
+方案一：HAPI_GetStringBufLength() + HAPI_GetString()
+
+​		通过`HAPI_GetStringBufLength`获取到字符串长度（buffer），然后`HAPI_GetString()`获取。类似代码如下：
+
+```c++
+int buffer_length;
+HAPI_GetStatusStringBufLength(
+    nullptr, id, HAPI_STATUSVERBOSITY_ERRORS, &buffer_length );
+char * buf = new char[ buffer_length ];
+HAPI_GetStatusString( nullptr, id, buf );
+std::string result( buf ); // result 即为字符串
+delete[] buf;
+```
+
+​		Ps：这点代码是由官方提供，暂时未经过测试（想来应该也是能用的），`HAPI_GetStatusStringBufLength` 第三个参数还需要测试一下。
+
+方案二：FHoudiniEngineString函数
+
+​		FHoudiniEngineString是Houdini Api中Unreal引擎侧的一个类，具体路径位置在``HoudiniEngineString.h``文件中，通过提供的toString方法，可以获得到给定string id的string值。具体代码类似如下：
+
+```c++
+// 获取csv路径
+HAPI_StringHandle MatNamesValueHandle;
+HAPI_Result result;
+FString csvPath = "";
+result = FHoudiniApi::GetParmStringValue(
+    FHoudiniEngine::Get().GetSession(), NodeId, TCHAR_TO_UTF8(*(FString("file"))), 0, 0, &MatNamesValueHandle);
+FHoudiniEngineString(MatNamesValueHandle).ToFString(csvPath);
+```
+
+​		`GetParmStringValue`函数根据给定的参数，获取到属性面板对应参数。
+
+---
+
+## 四. 获取Houdini 错误信息
+
+​		基本上所有Houdini函数的返回结果都是`HAPI_Result`，通过`HAPI_Result`可以得到函数具体结果，其中除了`HAPI_RESULT_SUCCESS`意外，其他均是错误信息。因此有些时候我们很有必要得到错误信息内容。通过以下函数，我们可以获取到具体错误信息：
+
+```c++
+static std::string get_last_error()
+{
+    int buffer_length;
+    HAPI_GetStatusStringBufLength(
+        nullptr, HAPI_STATUS_CALL_RESULT, HAPI_STATUSVERBOSITY_ERRORS, &buffer_length );
+    char * buf = new char[ buffer_length ];
+    HAPI_GetStatusString( nullptr, HAPI_STATUS_CALL_RESULT, buf );
+    std::string result( buf );
+    delete[] buf;
+    return result;
+}
+```
+
+---
+
+## 五. 总结
+
+​		暂时第一部分Houdini学习就到这里为止，都是一些比较基本的内容，重在抛砖引玉。下个内容，给出一些关于创建节点和Houdini交互的相关内容吧。
+
