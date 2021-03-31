@@ -1,230 +1,114 @@
+# 创建一个HDA流程
 
+​		本文主要记录基于Udini环境下，新建一个HDA资产和写数据一些基本流程。
 
-# 大象无形一书学习
+## 一. 配置Houdini环境
 
+​		Udini中显示HDA列表是通过xml文件，只有对xml文件添加新的HDA字段，才能正确在列表中显示出来。因此首先我们在Houdini中配置生成XML环境。
 
+​	1.  首先，需要在Houdini中配置一个新tool 工具：
 
-20210311
+​		启动Houdini，在上方工具栏点击右键，选择``New Tool...``，这是会打开工具编辑界面，如下所示：
 
-## 第一章
+<img src="https://raw.githubusercontent.com/DionysosLai/PicGoImage/main/image-20210325100918769.png" alt="image-20210325100918769" style="zoom: 80%;" />
 
-1. Uobject
+  2. 写入执行脚本：
 
-   提供功能：
+     接下来需要写入执行工具的py脚本，脚本内容如下：
 
-   1. Garbage collection垃圾收集
-   2. Reference updating引用自动更新
-   3. Reflectio反射
-   4. Serialization序列化
-   5. Automatic updating of default property changes自动检测默认变量的更
-   改
-   6. Automatic property initialization自动变量初始化
-   7. Automatic editor integration和虚幻引擎编辑器的自动交互
-   8. Type information available at runtime运行时类型识别
-   9. Network replication网络复制
+     ```python
+     def prettify(elem):
+         rough_string = ET.tostring(elem, 'utf-8')
+         reparsed = minidom.parseString(rough_string)
+         return reparsed.toprettyxml(indent="\t")
+     allNode =[]
+     all_nodeType_categories = hou.nodeTypeCategories()
+     rootHNode = hou.node("/obj/")
+     GeoNode = rootHNode.createNode("geo")
+     index1=0
+     for each in all_nodeType_categories.keys():
+         if(all_nodeType_categories[each].name()=="Sop"):
+             for key,value in all_nodeType_categories[each].nodeTypes().items():
+                 inputdescribe = ""
+                 outputdescribe = ""
+                 inputColor = ""
+                 outputColor = ""
+                 des = ""
+                 showName = value.description()
+                 try:
+                     dften = value.allInstalledDefinitions()[0]
+                     des = dften.comment()
+                 except:
+                     pass
+                 if 1:
+                     try:
+                         testNode =GeoNode.createNode(key,key,False,False)
+                         print testNode.type().name()
+                         intputLabs = testNode.inputLabels()
+                         outputLabs = testNode.outputLabels()
+                         jiontex = "||"
+                         outputdescribe = jiontex.join(outputLabs)
+                         inputdescribe = jiontex.join(intputLabs)
+                     except:
+                         pass
+                 des = ""    
+                 subsub=ET.Element("node",{"classType":"SopNode",
+                 "typeName":key,
+                 "showName":showName,
+                 "inputdescribe":inputdescribe,
+                 "outputdescribe":outputdescribe,
+                 "icon":value.icon(),
+                 "maxInputs":str(value.maxNumInputs()),
+                 "maxOutPuts":str(value.maxNumOutputs()),
+                 "tabClass":"Primtive",
+                 "describe":des
+                 })
+                 root.append(subsub)
+     tree=ET.ElementTree(root)
+     newStr=prettify(root)
+     file=open(r"G:\HXClientProjectUnreal\HXNext\Houdini\XML\nodeList.xml","w")
+     file.write(newStr)
+     file.close()
+     ```
 
-   注意：UObject类会在引擎加载阶段，创建一个DefaultObject默认对象。这意味着：
-   1. 构造函数并不是在游戏运行的时候调用，同时即便你只有一个UObject对象存在于场景中，构造函数依然会被调用两次。
-   2. 构造函数被调用的时候，UWorld不一定存在。GetWorld()返回值有可能为空！
-
-2.  Actor
-
-   Actor类拥有这样的能力：它能够被挂载组件 。需要挂载组件的时候，你才应该继承自Actor类。也就是说，我刚刚描述的，你的Manager，也许只需要一个纯C++类就够了（当然，你需要序列化之类的功能，那就是另一回事了）。
-
-3. Pawn
-
-   Pawn类提供了被“操作”的特性。它能够被一个Controller操纵。
-
-4.  Character
-
-   Character类代表一个角色，它继承自Pawn类。
-
-   Character类提供了一个特殊的组件，CharacterMovement。这个组件提供了一个基础的、基于胶囊体的角色移动功能。包括移动和跳跃，以及如果你需要，还能扩展出更多，例如蹲伏和爬行。如果你的Pawn类十分简单，或者不需要这样的移动逻辑（比如外星人飞船）
-
-5. Controlller
-
-   Controller是漂浮在Pawn/Character之上的灵魂。它操纵着Pawn和Character的行为。Controller可以是AI，AIController类，你可以在这个类中使用虚幻引擎优秀的行为树/EQS环境查询系统。同样也可以是玩家，PlayerController类。你可以在这个类中绑定输入，然后转化为对Pawn的指令。
-
-   通过possess和unpossess 来控制
-
-
-
-
-## 第四章
-
-### 4. 1 获取类对象
-
-​		获取场景中一个actor的所有实例：借助Actor 迭代器：TActorIterator，实例代码如下：
-
-```c++
-for(TActorIterator <AActor> Iterator(GetWorld());Iterator;++Iterator)
-{
-...//do something
-}
-```
-
-### 4.2 类对象产生
-
-		1. 纯C++（F开头），可以通过new 方式
-		2. 类继承自UObject但不继承自Actor，通过NewObject函数来产生出对象。这会返回一个指向你的类的指针，此时这个对象被分配在临时包中。下一次加载会被清除
-		3. 继承自AActor，你需要通过SpawnActor函数来产生出对象。需要通过UWorld对象（可以通过GetWorld()获得）的SpawnActor函数来产生出对象。示例代码：
-
-``` c++
-PersistentTerrainActor = World->SpawnActor<ATerrainActor>(ATerrainActor::StaticClass(), FTransform::Identity, SpawnParams);
-```
-
-### 4.3 类销毁
-
-1.  纯C++类，是通过栈方式创建，则在作用域结束后会自动释放。例如：
-
-   ```c++
-   void YourFunction( )
-   {
-       FYourClass YourObject=FYourClass();	// 在栈中创建
-       ...//Do something.
-   }
-   ```
-
-   如果是通过new来分配，创建在堆中，则有两种情况：
-
-   1. 通过 直接创建类指针方式，例如： FYourClass* YourObject = new FYourClass()，则需要手动delete。
-
-   2. 使用智能指针TSharedPtr/TSharedRef来进行管理，那么你的类对象将不需要也不应该被你手动释放。智能指针会使用引用计数来完成自动的内存释放。你可以使用MakeShareable函数来转化普通指针为智能指针：
-
-      ```c++
-      TSharedPtr<YourClass> YourClassPtr=MakeShareable(new YourClass())
-      ```
-
-      
-
-2.  UObject 类
-
-   ​		无法使用智能指针来管理。UObject采用自动垃圾回收机制（记得带有UPROPERTY宏定义）。
-
-   ​		垃圾回收器会定期从根节点Root开始检查，当一个UObject没有被别的任何UObject引用，就会被垃圾回收。你可以通过AddToRoot函数来让一个UObject一直不被回收。
-
-3. Actor 类
-
-   ​	Actor类对象可以通过调用Destory函数来请求销毁，这样的销毁意味着将当前Actor从所属的世界中“摧毁”。但是对象对应内存的回收依然是由系统决定。
+     其中倒数第三行，会打开一个xml文件写入，这里需要改成本地xml路径
 
 ---
 
-## 第五章 从c++到蓝图
+## 二. 创建一个新的HDA
 
-​		通过Uobject可以将类的成员变量注册到蓝图中。
+​		当我们制作好一个HDA时（一般是以subnet形式呈现），选中HDA右键鼠标，选择``Creare Digital Asset...```，然后填入对应参数即可。
 
-​		通过UFUNCTION宏可以将函数注册到蓝图中。例如
+​		在制作HDA时，由于我们当前是基于Udini环境下，因此制作的HDA需要在sob 层级下。
 
-```c++
-UFUNCTION(BlueprintCallable,Category="Test")
+​    	默认新创建的HDA都是锁住状态（不能更改里面参数），因此如皋该HDA需要支持动态修改参数，则修改修改HDA参数。选中HDA右键鼠标，选择``Type Properties...``，界面如下所示：
+
+<img src="https://raw.githubusercontent.com/DionysosLai/PicGoImage/main/image-20210325110542649.png" alt="image-20210325110542649" style="zoom: 80%;" />
+
+​		选择Script tab，然后再Event Handler 选择 On Create选项，之后在右边写入py脚本：
+
+```python
+node = kwargs["node"]
+node.allowEditingOfContents()
 ```
 
-​		其中BlueprintCallable是一个很重要的参数，表示这个函数可以被蓝图调用。可选的还有：BlueprintImplementEvent、BlueprintNativeEvent。前者表示，这个成员函数由其蓝图的子类实现，你不应该尝试在C++中给出函数的实现，这会导致链接错误。后者表示，这个成员函数提供一个“C++的默认实现”，同时也可以被蓝图重载。你需要提供一个“函数名_Implementation”为名字的函数实现，放置于.cpp中。
+​		该脚本允许我们在创建HDA资产时，编辑资产内容。
 
 ---
 
-## 第七章 引擎系统相关类
+## 三. Unreal 执行HDA
 
-### 7.1 正则表达式
-
-​		首先，需要先添加头文件
+​		当一个HDA需要动态编辑内容时，则需要在c++ 一侧执行特定函数。当一个HDA被执行时，会执行到函数：``FHdaNodeNetworkModule::CookNodeStart``，其中每个HDA都有一个特定名称，根据名称判断具体的HDA，然后执行特定功能，例如如下一段代码：
 
 ```c++
-#include "Internationalization/Regex.h"
+	if (node->typeName == "GetLandscape")
+	{
+		SetLandscapeNodeForInputNode(node->NodeId.Get());
+	}
+	if (node->typeName == "HxGetPureLandscape")
+	{
+		SetPureLandscapeNodeForInputNode(node->NodeId.Get());
+	}
 ```
 
-​		使用FRegexPattern创建匹配字符串
-
-```c++
-FRegexPattern Pattern(TEXT("[A-Z]:/*"));
-```
-
-​		使用FRegexMatcher进行匹配查找
-
-```c++
-FRegexMatcher regMatcher(Pattern, TEXT("mathce text"));
-regMatcher.SetLimits(0, csvPath.Len());
-if (!regMatcher.FindNext())
-	csvFile = FPaths::ProjectDir() / csvPath;
-```
-
-​		FRegexMatcher提供多个函数，如返回查找字符的起始位置、结束位置、设置查找区间等。但是我们最常用的还是FindNext()这个函数。它会返回一个bool值，表示是否查找到匹配表示式的内容
-
-### 7.2 FPahts
-
-​		路径处理类。
-
-1. 具体路径类 ，如：FPaths::GameDir()可以获取到游戏根目录。
-2. 工具类 ，如：FPaths::FileExists()用于判断一个文件是否存在。
-3. 路径转换类，如：FPaths::ConvertRelativePathToFull()用于将相对路径转换为绝对路径。
-
-### 7.3 XML、JSON、CSV
-
-XML
-		在Parser模块中，提供了两个类解析XML数据，分别是FastXML与FXmlFile。相对而言，用FXmlFile更方便一些。所以本例使用FXmlFile。
-
-JSON
-		JSON解析需要用到JSON模块以及Include"Json.h"
-
-CSV
-
-​		CSV 解析需要用到CSV模块，以及#include "Serialization/Csv/CsvParser.h"
-
-### 7.4 文件读写
-
-​		虚幻引擎提供了与平台无关的文件读写与访问接口，即FPlatformFileManager。
-
-​		通过以下调用：
-​		FPlatformFileManager::Get()->GetPlatformFile();
-​		能够获得一个IPlatformFile类型的引用。这个接口即提供了通用的文件访问接口，读者可以自行查询。虚幻引擎之所以这么麻烦，是为了提供文件的跨平台性。
-
-### 7.5 GConfi 配置
-
-**写配置**
-
-```c++
-GConfig->SetString(TEXT("MySection"),TEXT("Name"),TEXT("李白"),FPaths::GameDir()/ "MyConfig.ini");
-```
-
-​		第一个参数是指定Section，即一个区块（可以理解为一个分类）；第二个参数是指定此配置的Key；相当于此配置的具体名字；第三个参数为具体的值；最后一个参数是指定配置文件的路径，如果文件不存在，会自动创建此文件。
-
-**读配置**
-
-```c++
-FString Result;
-GConfig->GetString(TEXT("MySection"),TEXT("Name"),Result,FPaths::GameDir() / "MyConfig.ini");
-```
-
-### 7.6 UE_LOG
-
-**查看log**
-
-Game模式
-
-​		在Game（打包）模式下，记录Log需要在启动参数后加-Log。
-编辑器模式
-​		在编辑器下，需要打开Log窗口（Window->DeveloperTools-OutputLog）。
-
-**自定义Category**
-
-​		虚幻引擎4提供了多种自定义Category的宏。读者可自行参考LogMactos.h文件。这里介绍一种相对简单的自定义宏的方法。
-
-```c++
- DEFINE_LOG_CATEGORY_STATIC(LogMyCategory,Warning,All);
-```
-
-​		在使用DEFINE_LOG_CATEGORY_STATIC自定义Log分类的时候，我们可以将此宏放在你需要输出Log的源文件顶部。为了更方便地使用，可以将它放到PCH文件里，或者模块的头文件里（原则上是将Log分类定义放在被多数源文件include的文件里）。
-
-### 7.7 字符串处理
-
-**FName**
-
-​		FName是无法被修改的字符串，大小写不敏感。从语义上讲，名字也应该是唯一的。不管同样的字符串出现了多少次，在字符串表里只被存储一次。而借助这个哈希表，从字符串到FName的转换，以及根据Key查询FName会变得非常快速。
-
-**FText**
-
-​		FText表示一个“被显示的字符串”。所有你希望“显示”的字符串都应该是FText。因为FText提供了内置的本地化支持，也通过一张查找表来支持运行时本地化。FText不提供任何的更改操作，对于被显示的字符串来说，“修改”是一个非常不安全的操作。
-
-**FString**
-
-​		FString是唯一提供修改操作的字符串类。同时也意味着FString的消耗要高于FName和FText。
+​		其中，node参数表示该HDA具体信息，可以通过Houdini Api获得具体信息。
