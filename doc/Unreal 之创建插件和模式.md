@@ -14,6 +14,8 @@
 
 <img src="C:\Users\dionysoslai\AppData\Roaming\Typora\typora-user-images\image-20210331162749836.png" alt="image-20210331162749836" style="zoom:67%;" />
 
+
+
 ​		根据自己需求，选择插件类型即可（这里需要注意，新插件的生效需要重启工程）。
 
 ​		
@@ -31,6 +33,11 @@
     Icon128.png（图标，这个文件随便从引擎内部插件找一个）
 ---Source（用来存放具体功能代码）
     ---PluginTest（一个模块功能，可以添加多个模块）
+    	---Private
+    		PluginTest.cpp
+    	---Public
+    
+    	PluginTest.Build.cs
 PluginTest.uplugin（插件描述内容）
 ```
 
